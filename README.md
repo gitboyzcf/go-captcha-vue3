@@ -1,6 +1,8 @@
 # go-captcha-vue3
 Vue3 example of go-captcha
 
+> English | [中文](README.zh-CN.md)
+
 ## Project setup
 ```
 npm install

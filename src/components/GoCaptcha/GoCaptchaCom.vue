@@ -53,10 +53,12 @@
 </template>
 
 <script setup>
+import axios from 'axios'
+import { ElMessage } from 'element-plus'
 import { reactive, ref } from 'vue'
 import GoCaptchaBtn from './GoCaptchaBtn.vue'
 // import GoCaptchaBtnDialog from './components/GoCaptchaBtnDialog'
-import githubBtn from '@/assets/js/github-btn'
+import githubBtn from './js/github-btn'
 import _ from 'lodash-es'
 
 defineOptions({
@@ -85,26 +87,26 @@ const handleRequestCaptCode = () => {
   defaultData.captThumbBase64 = ''
   defaultData.captKey = ''
 
-  // this.$axios({
-  //   method: 'get',
-  //   url: '/api/go_captcha_data'
-  // }).then((response) => {
-  //   const { data = {} } = response
-  //   if ((data['code'] || 0) === 0) {
-  //     if (_.isEmpty(data)) {
-  //       return
-  //     }
+  axios({
+    method: 'get',
+    url: '/api/go_captcha_data'
+  }).then((response) => {
+    const { data = {} } = response
+    if ((data['code'] || 0) === 0) {
+      if (_.isEmpty(data)) {
+        return
+      }
 
-  //     defaultData.captBase64 = data['image_base64'] || ''
-  //     defaultData.captThumbBase64 = data['thumb_base64'] || ''
-  //     defaultData.captKey = data['captcha_key'] || ''
-  //   } else {
-  //     this.$message({
-  //       message: `获取人机验证数据失败`,
-  //       type: 'warning'
-  //     })
-  //   }
-  // })
+      defaultData.captBase64 = data['image_base64'] || ''
+      defaultData.captThumbBase64 = data['thumb_base64'] || ''
+      defaultData.captKey = data['captcha_key'] || ''
+    } else {
+      ElMessage({
+        message: `获取人机验证数据失败`,
+        type: 'warning'
+      })
+    }
+  })
 }
 
 /**
@@ -112,7 +114,7 @@ const handleRequestCaptCode = () => {
  */
 const handleConfirm = (dots) => {
   if (_.size(dots) <= 0) {
-    this.$message({
+    ElMessage({
       message: `请进行人机验证再操作`,
       type: 'warning'
     })
@@ -138,14 +140,14 @@ const handleConfirm = (dots) => {
   //   const { data = {} } = response
 
   //   if ((data['code'] || 0) === 0) {
-  //     this.$message({
+  //     ElMessage({
   //       message: `人机验证成功`,
   //       type: 'success'
   //     })
   //     defaultData.captStatus = 'success'
   //     defaultData.captAutoRefreshCount = 0
   //   } else {
-  //     this.$message({
+  //     ElMessage({
   //       message: `人机验证失败`,
   //       type: 'warning'
   //     })
